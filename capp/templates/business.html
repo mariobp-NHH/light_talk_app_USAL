@@ -1,0 +1,36 @@
+{% extends "layout.html" %}
+{% block content %}
+    <h1 style="color:blue; text-align: center">Modelo de negocio</h1>
+
+    <p>
+        Nuestro modelo de negocio esta basado en dos pilares ....           
+    </p>
+
+    <p>
+        <strong>Modelo de negocio. A continuación describimos brevemente nuestro modelo de negocio:</strong>
+        <ol>
+            <li>
+                Primer pilar ...
+            </li>
+            <li>
+                Segundo pilar ...
+            </li>
+        </ol>
+    </p>
+
+    <p>Para conocer más sobre nuestro equipo visitar nuestra página principal (<a href="{{ url_for('home.home_home') }}">enlace</a>)
+
+    </p>
+
+    <p>
+        <strong>Bibliografía:</strong>
+        <ul>
+            <li>
+                <strong>Artículo 1</strong>: Breve resumen.
+            </li>
+            <li>
+                <strong>Artículo 2</strong>: Breve resumen.
+            </li>
+        </ul>
+    </p>
+{% endblock content %}
