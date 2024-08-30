@@ -1,0 +1,178 @@
+{% extends "layout.html" %} {% block content %}
+
+<!-- Selection Section -->
+<section class="section_light_talk_app_new_entry_main">
+  <div class="container">
+    <div class="light_talk_app_new_entry_main">
+      <div class="box">
+        <div class="h1 mb-3" style="text-align: center">
+          <i class="fa-solid fa-pen-nib"></i>
+        </div>
+        <h3>Añade una frase</h3>
+        <!-- <p>
+          Aquí puedes <strong>añadir</strong> una frase a tu base de datos para
+          personalizar tu aprendizaje del castellano.
+        </p> -->
+        <div class="section_container_buttons_light_talk_app_new_entry_main">
+          <a
+            class="btn_light_talk_app_new_entry_main"
+            href="{{url_for('light_talk_app.add_sentence')}}"
+            >Añadir</a
+          >
+        </div>
+      </div>
+      <div class="box">
+        <div class="h1 mb-3" style="text-align: center">
+          <i class="fa-solid fa-check-double"></i>
+        </div>
+        <h3>Selecciona una frase</h3>
+        <!-- <p>
+          Aquí puedes <strong>seleccionar</strong> una frase de tu base de datos
+          para seguir mejorando en tu aprendizaje del castellano.
+        </p> -->
+        <div class="section_container_buttons_light_talk_app_new_entry_main">
+          <a
+            class="btn_light_talk_app_new_entry_main"
+            href="{{url_for('light_talk_app.select_sentence')}}"
+            >Seleccionar</a
+          >
+        </div>
+      </div>
+      <div class="box">
+        <div class="h1 mb-3" style="text-align: center">
+          <i class="fa-solid fa-square-poll-vertical"></i>
+        </div>
+        <h3>Tus frases y estadísticas</h3>
+        <!-- <p>
+          Aquí puedes <strong>ver y modificar</strong> tus frases. También puede
+          <strong>ver</strong> tus resultados y estadísticas.
+        </p> -->
+        <div class="section_container_buttons_light_talk_app_new_entry_main">
+          <a
+            class="btn_light_talk_app_new_entry_main"
+            href="{{url_for('light_talk_app.select_your_sentences')}}"
+            >Tus frases</a
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Selection Section -->
+<section class="section_light_talk_app_new_entry_main">
+  <div class="container">
+    <div class="light_talk_app_new_entry_main">
+      <div class="box" style="background-color: #f29545"></div>
+
+      <div class="box">
+        <canvas id="correct_vs_incorrect"></canvas>
+      </div>
+
+      <div class="box" style="background-color: #f29545"></div>
+    </div>
+  </div>
+</section>
+
+<!-- Table Section -->
+<section class="table_main">
+  <div class="container">
+    <div class="box"></div>
+    <div class="box">
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, message in messages %}
+      <div class="alert alert-{{ category }}">{{ message }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+      <script>
+        setTimeout(function () {
+          var flashes = document.querySelectorAll(".alert");
+          flashes.forEach((flash) => flash.remove());
+        }, 5000);
+      </script>
+      <table class="table">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Usuario</th>
+            <th scope="col">Fecha</th>
+            <th scope="col">Frase Incorrecta</th>
+            <th scope="col">Tu Frase</th>
+            <th scope="col">Resultado</th>
+            <th scope="col">Objetivo</th>
+            <th scope="col">Fuente</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for sentence in sentences %}
+          <tr>
+            <th scope="row">{{ current_user.username }}</th>
+            <td>{{ sentence.date.strftime("%m-%d-%Y") }}</td>
+            <td>{{ sentence.incorrect_sentence }}</td>
+            <td>{{ sentence.your_sentence }}</td>
+            <td>{{ sentence.result_string }}</td>
+            <td>{{ sentence.objective }}</td>
+            <td>{{ sentence.source }}</td>
+            <td>
+              <a
+                href="{{ url_for('light_talk_app.delete_sentence', sentence_id = sentence.id) }}"
+                class="btn btn-outline-danger btn-sm"
+                >Delete</a
+              >
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <div class="box"></div>
+  </div>
+</section>
+
+{% block javascript %}
+<script>
+
+  Chart.scaleService.updateScaleDefaults('linear', {
+                  ticks: {
+                      min: 0
+                  }
+          });
+
+
+          let correct_vs_incorrect_chart = new Chart(correct_vs_incorrect, {
+                  type: 'pie',
+                  data: {
+                  labels: ['Correcto', 'Incorrecto'],
+                      datasets: [{
+                          label: "Correcto Vs Incorrecto",
+                          data: [{{correct}}, {{incorrect}}],
+                          backgroundColor: ['#f2935c', '#f2d95c'],
+
+                          borderWidth: 1,
+                          hoverBorderColor: "black",
+                          hoverBorderWidth: 2,
+                          hoverBackgroundColor: 'rgba(154, 245, 140)',
+                          pointHoverRadius: 5
+                      }],
+                  },
+                  options: {
+                          title: {
+                              display: true,
+                                  text: "Tus resultados",
+                                      fontSize: 20,
+                                      fontColor: "black"
+                          },
+                          legend: {
+                              position: "right",
+                                  labels: {
+                                  fontColor: "black"
+                              },
+                              display: true,
+                          },
+
+                          elements: {
+                              hitRadius: 3,
+                          }
+                  }
+              })
+</script>
+{% endblock%} {% endblock content %}
